@@ -36,7 +36,7 @@ export function ChatInput({ input = "", setInput, handleSubmit, isLoading, autoS
           }
           
           if (currentTranscript.trim()) {
-            setInput((prev: string) => currentTranscript);
+            setInput(currentTranscript);
           }
         };
 
