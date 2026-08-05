@@ -1,0 +1,7 @@
+{
+  "type": "error",
+  "sequence_number": 2,
+  "error": {
+    "type": "insufficient_quota"
+  }
+}

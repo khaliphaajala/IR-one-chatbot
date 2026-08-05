@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+/* BASE (Defaults fallback to glassmorphism) */
+:root, .glassmorphism {
+  /* Vibrant blurred gradient background */
+  --bg-primary: #0b0914;
+  --bg-gradient: radial-gradient(circle at top right, rgba(56, 21, 89, 0.4) 0%, transparent 40%), 
+                 radial-gradient(circle at bottom left, rgba(28, 126, 161, 0.25) 0%, transparent 50%);
+  --bg-secondary: rgba(255, 255, 255, 0.03);
+  --bg-tertiary: rgba(255, 255, 255, 0.05);
+  
+  --text-primary: #f8fafc;
+  --text-secondary: rgba(255, 255, 255, 0.65);
+  --text-muted: rgba(255, 255, 255, 0.4);
+  
+  --border-theme: rgba(255, 255, 255, 0.08);
+  --accent-color: #a78bfa; /* Sophisticated soft violet */
+  
+  --chat-user-bg: rgba(167, 139, 250, 0.15);
+  --chat-user-text: #e0e7ff;
+  --chat-bot-bg: rgba(0, 0, 0, 0.25);
+  --chat-bot-text: #f8fafc;
+  
+  --glass-backdrop: blur(24px);
+  --neon-shadow: none;
+  --shadow-theme: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+  --radius-theme: 1.5rem; /* rounded-3xl */
+}
+
+/* MINIMALIST THEME */
+.minimalist {
+  --bg-primary: #fafafa;
+  --bg-gradient: none;
+  --bg-secondary: #ffffff; 
+  --bg-tertiary: #f4f4f5; 
+  
+  --text-primary: #09090b; 
+  --text-secondary: #52525b; 
+  --text-muted: #a1a1aa; 
+  
+  --border-theme: #e4e4e7; 
+  --accent-color: #18181b; /* Sleek monochrome accent */
+  
+  --chat-user-bg: #f4f4f5; 
+  --chat-user-text: #18181b; 
+  --chat-bot-bg: #ffffff;
+  --chat-bot-text: #09090b;
+  
+  --glass-backdrop: none;
+  --neon-shadow: none;
+  --shadow-theme: 0 4px 20px -4px rgba(0, 0, 0, 0.04), 0 2px 8px -2px rgba(0, 0, 0, 0.02);
+  --radius-theme: 1.25rem;
+}
+
+/* CYBERPUNK THEME */
+.cyberpunk {
+  --bg-primary: #000000;
+  --bg-gradient: none;
+  --bg-secondary: #0a0a0a;
+  --bg-tertiary: #141414;
+  
+  --text-primary: #ededed; 
+  --text-secondary: #a3a3a3;
+  --text-muted: #525252;
+  
+  --border-theme: #262626; 
+  --accent-color: #00e599; /* Premium electric emerald */
+  
+  --chat-user-bg: rgba(0, 229, 153, 0.08);
+  --chat-user-text: #00e599;
+  --chat-bot-bg: #0a0a0a;
+  --chat-bot-text: #ededed;
+  
+  --glass-backdrop: none;
+  --neon-shadow: 0 0 12px rgba(0, 229, 153, 0.15);
+  --shadow-theme: 0 4px 24px rgba(0, 0, 0, 0.5);
+  --radius-theme: 0.5rem; 
+}
+
+@theme inline {
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-tertiary: var(--bg-tertiary);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-border-theme: var(--border-theme);
+  --color-accent: var(--accent-color);
+  
+  --color-chat-user-bg: var(--chat-user-bg);
+  --color-chat-user-text: var(--chat-user-text);
+  --color-chat-bot-bg: var(--chat-bot-bg);
+  --color-chat-bot-text: var(--chat-bot-text);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@keyframes gradient-motion {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+body {
+  background-color: var(--bg-primary);
+  background-image: var(--bg-gradient);
+  background-size: 200% 200%;
+  color: var(--text-primary);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, background-image 0.3s ease, color 0.3s ease;
+  animation: gradient-motion 15s ease infinite;
+}
