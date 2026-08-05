@@ -11,6 +11,8 @@ export async function POST(req: Request) {
   const body = await req.json();
   const messages = body.messages || body; // Fallback if it sends an array directly
   const chatId = body.id; // Optional: sent from client
+  const requestedModel = body.model || 'gemini-1.5-flash';
+  const customSystemPrompt = body.systemPrompt || "You are IR one, a helpful and modern AI chatbot similar to ChatGPT. You assist users with answering questions, writing code, and analyzing files.";
 
   const session = await getServerSession(authOptions);
 
@@ -23,9 +25,13 @@ export async function POST(req: Request) {
       return m;
     });
 
+    const aiModel = requestedModel === 'gemini-1.5-pro' 
+      ? google('gemini-1.5-pro-latest') 
+      : google('gemini-1.5-flash-latest');
+
     const result = await streamText({
-      model: google('gemini-flash-lite-latest'),
-      system: "You are IR one, a helpful and modern AI chatbot similar to ChatGPT. You assist users with answering questions, writing code, and analyzing files.",
+      model: aiModel,
+      system: customSystemPrompt,
       messages: await convertToModelMessages(sanitizedMessages),
       async onFinish({ text, toolCalls, toolResults, finishReason, usage }) {
         if (!session?.user?.id) return; // Only save if user is logged in

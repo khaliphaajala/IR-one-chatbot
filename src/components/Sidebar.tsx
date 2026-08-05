@@ -1,15 +1,37 @@
 "use client";
 
-import { PlusCircle, MessageSquare, Trash2, Edit2, LogOut } from "lucide-react";
+import { PlusCircle, MessageSquare, Trash2, Edit2, LogOut, Settings } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
+import { SettingsModal } from "./SettingsModal";
 
 export function Sidebar({ currentChatId = null }: { currentChatId?: string | null }) {
   const { data: session, status } = useSession();
   const [chats, setChats] = useState<any[]>([]);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const router = useRouter();
+
+  const handleDeleteChat = async (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!confirm("Are you sure you want to delete this chat?")) return;
+
+    try {
+      const res = await fetch(`/api/chats/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setChats(prev => prev.filter(c => c.id !== id));
+        if (currentChatId === id) {
+          router.push("/");
+        }
+      }
+    } catch (error) {
+      console.error("Failed to delete chat", error);
+    }
+  };
 
   useEffect(() => {
     const fetchChats = () => {
@@ -65,7 +87,12 @@ export function Sidebar({ currentChatId = null }: { currentChatId?: string | nul
               <span className="flex-1 truncate">{chat.title}</span>
               <div className="opacity-0 group-hover:opacity-100 flex items-center gap-1">
                 <button className="p-1 hover:text-blue-500 transition-colors"><Edit2 size={14} /></button>
-                <button className="p-1 hover:text-red-500 transition-colors"><Trash2 size={14} /></button>
+                <button 
+                  onClick={(e) => handleDeleteChat(e, chat.id)}
+                  className="p-1 hover:text-red-500 transition-colors"
+                >
+                  <Trash2 size={14} />
+                </button>
               </div>
             </Link>
           ))
@@ -97,8 +124,20 @@ export function Sidebar({ currentChatId = null }: { currentChatId?: string | nul
             </span>
           </Link>
         )}
+        <button 
+          onClick={() => setIsSettingsOpen(true)}
+          className="p-2 rounded-full hover:bg-bg-tertiary text-text-muted hover:text-accent transition-colors"
+          title="Settings"
+        >
+          <Settings size={18} />
+        </button>
         <ThemeToggle />
       </div>
+
+      <SettingsModal 
+        isOpen={isSettingsOpen} 
+        onClose={() => setIsSettingsOpen(false)} 
+      />
     </div>
   );
 }

@@ -15,18 +15,31 @@ interface ChatClientProps {
 
 export function ChatClient({ id, initialMessages = [] }: ChatClientProps) {
   const [chatId, setChatId] = useState(id || "");
+  const [model, setModel] = useState("gemini-1.5-flash");
+  const [systemPrompt, setSystemPrompt] = useState("");
   
   useEffect(() => {
     if (!id) {
       setChatId(generateId());
     }
+
+    const loadSettings = () => {
+      const savedModel = localStorage.getItem("ir-model");
+      const savedPrompt = localStorage.getItem("ir-system-prompt");
+      if (savedModel) setModel(savedModel);
+      if (savedPrompt) setSystemPrompt(savedPrompt);
+    };
+
+    loadSettings();
+    window.addEventListener('settings-updated', loadSettings);
+    return () => window.removeEventListener('settings-updated', loadSettings);
   }, [id]);
 
   // @ts-ignore - Bypass AI SDK UseChatOptions typing changes in v4
-  const { messages, sendMessage, status, error } = useChat({
+  const { messages, sendMessage, stop, status, error } = useChat({
     id: chatId,
     initialMessages,
-    body: { id: chatId },
+    body: { id: chatId, model, systemPrompt },
     api: '/api/chat'
   } as any);
   
@@ -132,6 +145,7 @@ export function ChatClient({ id, initialMessages = [] }: ChatClientProps) {
             setInput={setInput}
             handleSubmit={handleSubmit}
             isLoading={isLoading}
+            stop={stop}
             autoSpeak={autoSpeak}
             setAutoSpeak={setAutoSpeak}
           />

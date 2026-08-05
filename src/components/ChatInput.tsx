@@ -2,17 +2,19 @@
 
 import { Send, Paperclip, Mic, Volume2, VolumeX } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
+import clsx from "clsx";
 
 interface ChatInputProps {
   input: string;
   setInput: (value: string) => void;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  isLoading: boolean;
+  isLoading?: boolean;
+  stop?: () => void;
   autoSpeak: boolean;
   setAutoSpeak: (value: boolean) => void;
 }
 
-export function ChatInput({ input = "", setInput, handleSubmit, isLoading, autoSpeak, setAutoSpeak }: ChatInputProps) {
+export function ChatInput({ input = "", setInput, handleSubmit, isLoading, stop, autoSpeak, setAutoSpeak }: ChatInputProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<any>(null);
@@ -137,13 +139,29 @@ export function ChatInput({ input = "", setInput, handleSubmit, isLoading, autoS
           <Mic size={20} />
         </button>
 
-        <button 
-          type="submit"
-          disabled={!input.trim() || isLoading}
-          className="p-2 m-1 bg-accent text-white rounded-xl hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center h-10 w-10 shadow-sm"
-        >
-          <Send size={18} className={input.trim() ? "translate-x-0.5" : ""} />
-        </button>
+        {isLoading && stop ? (
+          <button
+            type="button"
+            onClick={stop}
+            className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full bg-red-500/20 text-red-500 hover:bg-red-500/30 transition-all border border-red-500/50"
+            title="Stop generating"
+          >
+            <div className="w-3 h-3 bg-red-500 rounded-sm" />
+          </button>
+        ) : (
+          <button
+            type="submit"
+            disabled={!input.trim()}
+            className={clsx(
+              "w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full transition-all",
+              input.trim()
+                ? "bg-accent text-white hover:bg-accent-hover shadow-md border border-accent"
+                : "bg-bg-tertiary text-text-muted border border-border-theme opacity-50 cursor-not-allowed"
+            )}
+          >
+            <Send size={18} className={clsx(input.trim() && "translate-x-0.5")} />
+          </button>
+        )}
       </form>
       <div className="text-center text-xs text-text-muted mt-3">
         {micError ? (
