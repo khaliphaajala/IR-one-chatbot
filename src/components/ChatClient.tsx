@@ -1,7 +1,7 @@
 "use client";
 
 import { useChat, UIMessage } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
+// import { DefaultChatTransport } from "ai";
 import { Sidebar } from "@/components/Sidebar";
 import { ChatMessage } from "@/components/ChatMessage";
 import { ChatInput } from "@/components/ChatInput";
@@ -23,11 +23,11 @@ export function ChatClient({ id, initialMessages = [] }: ChatClientProps) {
   }, [id]);
 
   // @ts-ignore - Bypass AI SDK UseChatOptions typing changes in v4
-  const { messages, append, status, error } = useChat({
+  const { messages, sendMessage, status, error } = useChat({
     id: chatId,
     initialMessages,
     body: { id: chatId },
-    transport: new DefaultChatTransport({ api: '/api/chat' })
+    api: '/api/chat'
   } as any);
   
   const [input, setInput] = useState("");
@@ -38,7 +38,7 @@ export function ChatClient({ id, initialMessages = [] }: ChatClientProps) {
     if (!input.trim() || isLoading || !chatId) return;
     
     // @ts-ignore - Bypass AI SDK typing changes in v4
-    append({ role: 'user', content: input });
+    sendMessage({ role: 'user', content: input });
     setInput("");
 
     // If this is the first message on the root page, update the URL
