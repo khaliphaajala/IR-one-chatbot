@@ -26,8 +26,8 @@ export async function POST(req: Request) {
     });
 
     const aiModel = requestedModel === 'gemini-1.5-pro' 
-      ? google('gemini-1.5-pro-latest') 
-      : google('gemini-1.5-flash-latest');
+      ? google('gemini-1.5-pro') 
+      : google('gemini-1.5-flash');
 
     const result = await streamText({
       model: aiModel,
